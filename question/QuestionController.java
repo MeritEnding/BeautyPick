@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.RequiredArgsConstructor;
 
+import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.answer.AnswerForm;
+import com.mysite.sbb.answer.AnswerService;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.data.domain.Page;
 import java.security.Principal;
@@ -34,7 +37,7 @@ public class QuestionController {
 
 	private final QuestionService questionService;
 	private final UserService userService;
-	
+	private final AnswerService answerService;
 	
 	@GetMapping("/list")
     public String list(Model model, @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
@@ -45,11 +48,15 @@ public class QuestionController {
     }
 	
 	@GetMapping(value = "/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
-    	this.questionService.viewUp(id);
-		Question question = this.questionService.getQuestion(id);
+    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm,
+                         @RequestParam(value="ans-page", defaultValue="0") int answerPage,
+                         @RequestParam(value="ans-ordering", defaultValue="time") String answerOrderMethod) {
+        this.questionService.viewUp(id);
+        Question question = this.questionService.getQuestion(id);
+        Page<Answer> answerPaging = this.answerService.getAnswerList(question, 
+                                                                                                                    answerPage, answerOrderMethod);
         model.addAttribute("question", question);
-    	
+        model.addAttribute("ans_paging", answerPaging);
         return "question_detail";
     }
 	
