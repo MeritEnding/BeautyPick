@@ -97,5 +97,16 @@ public class QuestionService {
         this.questionRepository.save(question);
     }
     
+    public void viewUp(Integer id) {
+        Optional<Question> oq = this.questionRepository.findById(id);
+        if (oq.isPresent()) {
+            Question question = oq.get();
+            question.setViews(question.getViews() + 1);
+            this.questionRepository.save(question);
+        } else {
+            throw new DataNotFoundException("question not found");
+        }
+    }
+    
     
 }

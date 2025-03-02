@@ -1,11 +1,13 @@
 package com.mysite.sbb.question;
 import jakarta.persistence.ManyToOne;
 import com.mysite.sbb.user.SiteUser;
+
+import groovyjarjarantlr4.v4.runtime.misc.NotNull;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 import com.mysite.sbb.answer.Answer;
-import com.mysite.sbb.category.Category;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -36,6 +38,9 @@ public class Question {
 	
 	private LocalDateTime createDate;
 	
+	 @Column(columnDefinition = "integer default 0")
+     @NotNull
+     private Integer views = 0;
 	
 	 @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE) 
 	 private List<Answer> answerList; 
@@ -48,8 +53,7 @@ public class Question {
 	 @ManyToMany
      Set<SiteUser> voter;
 	 
-	 @ManyToOne
-	 private Category category;
+	 
 	 
 
 }
